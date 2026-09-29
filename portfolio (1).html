@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shivanand — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    --bg: #f4f6fb;
+    --surface: #e8ecf7;
+    --ink: #0f1a2b;
+    --muted: #55617a;
+    --line: #d3daea;
+    --blue: #2b44ff;
+    --violet: #8b3dff;
+    --pink: #ff3d81;
+    --amber: #ffab00;
+    --green: #12b76a;
+    --cyan: #06b6d4;
+    --btn-ink: #ffffff;
+    --blob-opacity: .38;
+    --display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+    --body: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0b1122; --surface: #151e3a; --ink: #eef2fc; --muted: #9aa6c2; --line: #263152;
+      --blue: #7c8cff; --violet: #b483ff; --pink: #ff6fa2; --amber: #ffc233; --green: #3ddc97; --cyan: #34d3ee;
+      --btn-ink: #0b1122; --blob-opacity: .3;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0b1122; --surface: #151e3a; --ink: #eef2fc; --muted: #9aa6c2; --line: #263152;
+    --blue: #7c8cff; --violet: #b483ff; --pink: #ff6fa2; --amber: #ffc233; --green: #3ddc97; --cyan: #34d3ee;
+    --btn-ink: #0b1122; --blob-opacity: .3;
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); scroll-behavior: smooth; }
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--body); font-size: 1.0625rem; line-height: 1.6;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; border-radius: 4px; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 48px); position: relative; }
+
+  /* Scroll progress bar */
+  #progress {
+    position: fixed; top: 0; left: 0; height: 4px; width: 0; z-index: 50;
+    padding-top: 0; margin-top: env(safe-area-inset-top, 0px);
+    background: linear-gradient(90deg, var(--blue), var(--violet), var(--pink), var(--amber));
+  }
+
+  /* Floating color blobs */
+  .blobs { position: absolute; inset: 0 0 auto 0; height: 900px; overflow: hidden; pointer-events: none; z-index: 0; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: var(--blob-opacity); }
+  .b1 { width: 380px; height: 380px; background: var(--violet); top: -80px; left: -60px; animation: float1 14s ease-in-out infinite; }
+  .b2 { width: 320px; height: 320px; background: var(--pink); top: 120px; right: -40px; animation: float2 17s ease-in-out infinite; }
+  .b3 { width: 280px; height: 280px; background: var(--amber); top: 420px; left: 35%; animation: float3 19s ease-in-out infinite; }
+  .b4 { width: 260px; height: 260px; background: var(--cyan); top: 60px; left: 45%; animation: float1 21s ease-in-out infinite reverse; }
+  @keyframes float1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(70px, 60px) scale(1.15); } }
+  @keyframes float2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-80px, 50px) scale(.9); } }
+  @keyframes float3 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-60px, -50px) scale(1.2); } }
+
+  header.bar, main, footer { position: relative; z-index: 1; }
+  header.bar { display: flex; justify-content: space-between; align-items: center; padding: 22px 0; gap: 16px; }
+  header.bar nav { display: flex; gap: clamp(14px, 3vw, 28px); font-size: .95rem; }
+  header.bar nav a { text-decoration: none; color: var(--muted); position: relative; padding-bottom: 2px; }
+  header.bar nav a::after {
+    content: ""; position: absolute; left: 0; bottom: 0; height: 2px; width: 0;
+    background: linear-gradient(90deg, var(--blue), var(--pink)); transition: width .25s ease;
+  }
+  header.bar nav a:hover { color: var(--ink); }
+  header.bar nav a:hover::after { width: 100%; }
+  .status { font-size: .9rem; color: var(--muted); display: flex; align-items: center; gap: 9px; }
+  .status::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--green); animation: ping 1.8s ease-out infinite; }
+  @keyframes ping { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--green) 70%, transparent); } 100% { box-shadow: 0 0 0 12px transparent; } }
+
+  /* Hero */
+  .hero { padding: clamp(36px, 8vw, 96px) 0 clamp(30px, 5vw, 56px); }
+  .name {
+    font-family: var(--display); font-weight: 800;
+    font-size: clamp(3.6rem, 17.5vw, 13.5rem); line-height: .95; letter-spacing: -.035em; margin: 0;
+    font-variation-settings: "wdth" 100, "opsz" 96;
+    background: linear-gradient(90deg, var(--blue), var(--violet), var(--pink), var(--amber), var(--blue));
+    background-size: 300% 100%;
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+    animation: settle 1.4s cubic-bezier(.2,.8,.2,1) both, shimmer 8s linear infinite;
+    padding-bottom: .06em;
+  }
+  @keyframes settle {
+    from { font-variation-settings: "wdth" 75, "opsz" 96; font-weight: 300; letter-spacing: .02em; opacity: 0; }
+    to   { font-variation-settings: "wdth" 100, "opsz" 96; font-weight: 800; letter-spacing: -.035em; opacity: 1; }
+  }
+  @keyframes shimmer { to { background-position: 300% 0; } }
+
+  .intro { display: grid; gap: 26px; margin-top: clamp(24px, 4vw, 44px); max-width: 62ch; }
+  .intro p { margin: 0; font-size: clamp(1.2rem, 2.4vw, 1.5rem); line-height: 1.45; }
+  .role { font-weight: 700; background: linear-gradient(90deg, var(--pink), var(--amber)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }
+  .caret { display: inline-block; width: 3px; height: 1.1em; background: var(--pink); margin-left: 3px; vertical-align: -.15em; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .intro p span.sub { color: var(--muted); display: block; margin-top: 6px; }
+
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn {
+    display: inline-block; padding: 13px 24px; border-radius: 999px; font-weight: 600; text-decoration: none; font-size: 1rem;
+    color: #fff; position: relative; overflow: hidden;
+    background: linear-gradient(120deg, var(--blue), var(--violet) 55%, var(--pink));
+    background-size: 160% 100%; transition: transform .2s ease, background-position .4s ease, box-shadow .2s ease;
+    box-shadow: 0 8px 22px -10px var(--violet);
+  }
+  .btn:hover { transform: translateY(-3px) scale(1.03); background-position: 100% 0; box-shadow: 0 14px 26px -10px var(--pink); }
+  .btn.ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--line); box-shadow: none; }
+  .btn.ghost:hover { border-color: var(--pink); color: var(--pink); background: transparent; }
+
+  /* Road with driving truck (ties to the waste-collection project) */
+  .road { position: relative; height: 124px; margin-top: clamp(28px, 5vw, 56px); overflow: hidden; }
+  .road::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 10px; height: 4px;
+    background: repeating-linear-gradient(90deg, var(--muted) 0 26px, transparent 26px 52px);
+    opacity: .5; animation: dash 1.2s linear infinite;
+  }
+  @keyframes dash { to { background-position: -52px 0; } }
+  .truck { position: absolute; bottom: 14px; left: 0; width: 120px; animation: drive 10s linear infinite; }
+  @keyframes drive { from { transform: translateX(-140px); } to { transform: translateX(calc(min(1000px, 92vw) + 20px)); } }
+  .truck svg { display: block; width: 120px; height: auto; animation: bounce .5s ease-in-out infinite alternate; }
+  @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-2px); } }
+  .wheel { transform-box: fill-box; transform-origin: center; animation: spin .6s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .bubble {
+    position: absolute; left: 34px; bottom: 62px; white-space: nowrap;
+    background: var(--ink); color: var(--bg); font-size: .8rem; font-weight: 600;
+    padding: 5px 11px; border-radius: 999px; animation: pop 3s ease-in-out infinite;
+  }
+  .bubble::after { content: ""; position: absolute; left: 16px; bottom: -5px; width: 10px; height: 10px; background: var(--ink); transform: rotate(45deg); }
+  @keyframes pop { 0%,100% { transform: scale(.85); opacity: .0; } 15%,80% { transform: scale(1); opacity: 1; } }
+
+  /* Sections */
+  section { padding: clamp(40px, 7vw, 84px) 0; border-top: 1px solid var(--line); }
+  .sec-grid { display: grid; grid-template-columns: 1fr; gap: 28px; }
+  @media (min-width: 820px) { .sec-grid { grid-template-columns: 220px 1fr; gap: 48px; } }
+  h2 { font-family: var(--display); font-weight: 700; margin: 0; font-size: 1.7rem; letter-spacing: -.01em; line-height: 1.15; display: inline-block; align-self: start; }
+  h2::after {
+    content: ""; display: block; height: 5px; width: 0; margin-top: 8px; border-radius: 3px;
+    background: linear-gradient(90deg, var(--blue), var(--pink)); transition: width .8s cubic-bezier(.2,.8,.2,1) .2s;
+  }
+  .in h2::after, html:not(.js) h2::after { width: 56px; }
+  #work h2::after { background: linear-gradient(90deg, var(--blue), var(--violet)); }
+  #about h2::after { background: linear-gradient(90deg, var(--pink), var(--amber)); }
+  #skills h2::after { background: linear-gradient(90deg, var(--green), var(--cyan)); }
+  #experience h2::after { background: linear-gradient(90deg, var(--amber), var(--pink)); }
+  #contact h2::after { background: linear-gradient(90deg, var(--violet), var(--cyan)); }
+
+  /* Work */
+  .work { list-style: none; margin: 0; padding: 0; }
+  .work li { border-bottom: 1px solid var(--line); }
+  .work li:first-child { border-top: 1px solid var(--line); }
+  .work a {
+    display: grid; grid-template-columns: 1fr; gap: 6px; padding: 26px 14px; margin: 0 -14px;
+    text-decoration: none; border-radius: 14px; position: relative;
+    transition: background .25s ease, transform .25s ease;
+  }
+  .work a::before {
+    content: ""; position: absolute; left: 0; top: 14px; bottom: 14px; width: 4px; border-radius: 2px;
+    background: linear-gradient(var(--blue), var(--pink)); transform: scaleY(0); transition: transform .3s ease;
+  }
+  .work a:hover { background: var(--surface); transform: translateX(8px); }
+  .work a:hover::before { transform: scaleY(1); }
+  @media (min-width: 640px) { .work a { grid-template-columns: 1fr auto; gap: 8px 24px; } }
+  .work h3 { font-family: var(--display); font-size: 1.5rem; font-weight: 600; margin: 0; letter-spacing: -.01em; }
+  .work .yr { color: var(--muted); font-size: .95rem; }
+  .work p { margin: 0; color: var(--muted); max-width: 56ch; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; grid-column: 1 / -1; }
+  .tags span { font-size: .85rem; font-weight: 500; padding: 4px 12px; border-radius: 999px; transition: transform .2s ease; }
+  .tags span:nth-child(5n+1) { background: color-mix(in srgb, var(--blue) 16%, transparent); color: var(--blue); }
+  .tags span:nth-child(5n+2) { background: color-mix(in srgb, var(--pink) 16%, transparent); color: var(--pink); }
+  .tags span:nth-child(5n+3) { background: color-mix(in srgb, var(--green) 18%, transparent); color: var(--green); }
+  .tags span:nth-child(5n+4) { background: color-mix(in srgb, var(--amber) 22%, transparent); color: color-mix(in srgb, var(--amber) 70%, var(--ink)); }
+  .tags span:nth-child(5n+5) { background: color-mix(in srgb, var(--violet) 16%, transparent); color: var(--violet); }
+  .work a:hover .tags span { transform: translateY(-2px); }
+
+  .about p { margin: 0 0 1.1em; max-width: 60ch; }
+  .about p:last-child { margin-bottom: 0; }
+
+  .skills { display: grid; grid-template-columns: 1fr; gap: 16px; margin: 0; }
+  @media (min-width: 640px) { .skills { grid-template-columns: 1fr 1fr; } }
+  .skills > div { padding: 18px 20px; border-radius: 16px; background: var(--surface); border-left: 5px solid var(--c); transition: transform .25s ease; }
+  .skills > div:hover { transform: translateY(-4px) rotate(-.4deg); }
+  .skills > div:nth-child(1) { --c: var(--blue); }
+  .skills > div:nth-child(2) { --c: var(--pink); }
+  .skills > div:nth-child(3) { --c: var(--green); }
+  .skills > div:nth-child(4) { --c: var(--amber); }
+  .skills dt { font-weight: 600; margin-bottom: 4px; color: var(--c); }
+  .skills dd { margin: 0; color: var(--muted); }
+
+  .jobs { list-style: none; margin: 0; padding: 0 0 0 22px; display: grid; gap: 28px; position: relative; }
+  .jobs::before { content: ""; position: absolute; left: 5px; top: 8px; bottom: 8px; width: 3px; border-radius: 2px; background: linear-gradient(var(--blue), var(--pink), var(--amber)); }
+  .jobs li { display: grid; gap: 4px; position: relative; }
+  .jobs li::before { content: ""; position: absolute; left: -24px; top: 7px; width: 13px; height: 13px; border-radius: 50%; background: var(--bg); border: 3px solid var(--pink); }
+  .jobs li:nth-child(1)::before { border-color: var(--blue); }
+  .jobs li:nth-child(3)::before { border-color: var(--amber); }
+  @media (min-width: 640px) { .jobs li { grid-template-columns: 160px 1fr; gap: 24px; } }
+  .jobs .when { color: var(--muted); font-size: .95rem; }
+  .jobs strong { display: block; font-weight: 600; }
+  .jobs p { margin: 2px 0 0; color: var(--muted); max-width: 56ch; }
+
+  .contact { padding-bottom: clamp(56px, 9vw, 110px); }
+  .contact .big {
+    font-family: var(--display); font-weight: 700; letter-spacing: -.03em; line-height: 1.02;
+    font-size: clamp(2.2rem, 7vw, 4.6rem); margin: 0 0 28px; max-width: 16ch;
+    background: linear-gradient(90deg, var(--ink) 30%, var(--violet), var(--pink)); background-size: 200% 100%;
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+    animation: shimmer2 6s ease-in-out infinite alternate;
+  }
+  @keyframes shimmer2 { to { background-position: 100% 0; } }
+  .links { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 30px; }
+  .links a { color: var(--muted); text-underline-offset: 4px; transition: color .2s ease, transform .2s ease; display: inline-block; }
+  .links a:nth-child(1):hover { color: var(--violet); transform: translateY(-2px); }
+  .links a:nth-child(2):hover { color: var(--blue); transform: translateY(-2px); }
+  .links a:nth-child(3):hover { color: var(--pink); transform: translateY(-2px); }
+
+  footer { padding: 26px 0 34px; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  #themeBtn { background: none; border: 0; color: inherit; font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; padding: 0; }
+
+
+  /* Extra animations */
+
+  .shapes span { position: absolute; display: block; opacity: .85; }
+  .s1 { width: 26px; height: 26px; border: 4px solid var(--pink); border-radius: 6px; top: 150px; left: 8%; animation: spinfloat 9s linear infinite; }
+  .s2 { width: 20px; height: 20px; background: var(--amber); border-radius: 50%; top: 260px; right: 12%; animation: bob 5s ease-in-out infinite; }
+  .s3 { width: 0; height: 0; border-left: 14px solid transparent; border-right: 14px solid transparent; border-bottom: 24px solid var(--green); top: 90px; right: 30%; animation: spinfloat 12s linear infinite reverse; }
+  .s4 { width: 34px; height: 34px; border: 4px solid var(--cyan); border-radius: 50%; top: 380px; left: 20%; animation: bob 7s ease-in-out infinite reverse; }
+  .s5 { width: 16px; height: 16px; background: var(--violet); border-radius: 4px; top: 60px; left: 55%; animation: spinfloat 8s linear infinite; }
+  @keyframes spinfloat { 0% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-26px) rotate(180deg); } 100% { transform: translateY(0) rotate(360deg); } }
+  @keyframes bob { 0%,100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-22px) scale(1.25); } }
+
+  .ticker { overflow: hidden; margin: 8px calc(-1 * clamp(20px, 5vw, 48px)) 0; padding: 18px 0; border-block: 1px solid var(--line); position: relative; z-index: 1;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  .ticker-track { display: flex; width: max-content; animation: scrollx 26s linear infinite; }
+  .ticker:hover .ticker-track { animation-play-state: paused; }
+  .ticker-track span { font-family: var(--display); font-weight: 700; font-size: clamp(1.3rem, 3.4vw, 2rem); padding: 0 26px; white-space: nowrap; display: flex; align-items: center; gap: 52px; }
+  .ticker-track span::after { content: "\2726"; font-size: .8em; }
+  .ticker-track span:nth-child(6n+1) { color: var(--blue); }
+  .ticker-track span:nth-child(6n+2) { color: var(--pink); }
+  .ticker-track span:nth-child(6n+3) { color: var(--green); }
+  .ticker-track span:nth-child(6n+4) { color: var(--amber); }
+  .ticker-track span:nth-child(6n+5) { color: var(--violet); }
+  .ticker-track span:nth-child(6n+6) { color: var(--cyan); }
+  @keyframes scrollx { to { transform: translateX(-50%); } }
+
+  .work h3::after { content: "\2192"; display: inline-block; margin-left: 10px; color: var(--pink); opacity: 0; transform: translateX(-10px); transition: opacity .25s ease, transform .25s ease; }
+  .work a:hover h3::after { opacity: 1; transform: translateX(0); }
+
+  .skills > div, .btn { will-change: transform; }
+  .burst { position: fixed; width: 10px; height: 10px; border-radius: 3px; pointer-events: none; z-index: 60; }
+
+  .shot { grid-column: 1 / -1; margin-top: 14px; max-width: 560px; border-radius: 22px; overflow: hidden; box-shadow: 0 18px 40px -20px var(--violet); }
+  .shot svg { display: block; width: 100%; height: auto; }
+  .notif { animation: notifpop 7s ease-in-out infinite; }
+  @keyframes notifpop { 0%,28% { transform: translateY(-70px); } 38%,88% { transform: translateY(0); } 98%,100% { transform: translateY(-70px); } }
+  .chip { animation: chipbob 4s ease-in-out infinite alternate; }
+  .chip.c2 { animation-delay: -1.3s; }
+  .chip.c3 { animation-delay: -2.6s; }
+  @keyframes chipbob { from { transform: translateY(0); } to { transform: translateY(-7px); } }
+
+  /* Scroll reveal (only hides when JS is running) */
+  .js .reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1); }
+  .js .reveal.in { opacity: 1; transform: none; }
+  .js .stagger > * { opacity: 0; transform: translateY(22px); transition: opacity .6s ease, transform .6s cubic-bezier(.2,.8,.2,1); }
+  .js .stagger.in > * { opacity: 1; transform: none; }
+  .js .stagger.in > *:nth-child(1) { transition-delay: .05s; }
+  .js .stagger.in > *:nth-child(2) { transition-delay: .18s; }
+  .js .stagger.in > *:nth-child(3) { transition-delay: .31s; }
+  .js .stagger.in > *:nth-child(4) { transition-delay: .44s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .js .reveal, .js .stagger > * { opacity: 1; transform: none; }
+    .truck { left: 40px; }
+    .burst { display: none; }
+  }
+</style>
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<div id="progress" aria-hidden="true"></div>
+<div class="wrap">
+  
+
+  <header class="bar">
+    <span class="status">Open to new projects</span>
+    <nav aria-label="Primary">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#experience">Experience</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="hero">
+      <h1 class="name">Shivanand</h1>
+      <div class="intro">
+        <p>I'm a <span class="role" id="role">full-stack developer</span><span class="caret" aria-hidden="true"></span> who builds fast, clear products.
+           <span class="sub">I care about details that make software easy to use and easy to maintain.</span></p>
+        <div class="actions">
+          <a class="btn" href="#work">See my work</a>
+          <a class="btn ghost" href="#contact">Get in touch</a>
+        </div>
+      </div>
+      <div class="road" aria-hidden="true">
+        <div class="truck">
+          <div class="bubble">Arriving in 5 min</div>
+          <svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="10" width="72" height="34" rx="6" fill="#12b76a"/>
+            <rect x="10" y="16" width="60" height="6" rx="3" fill="#ffffff" opacity=".35"/>
+            <path d="M78 20h20l14 14v10H78z" fill="#2b44ff"/>
+            <path d="M84 24h12l8 9H84z" fill="#bfe3ff"/>
+            <rect x="4" y="44" width="108" height="4" rx="2" fill="#0f1a2b"/>
+            <g class="wheel"><circle cx="28" cy="50" r="8" fill="#0f1a2b"/><circle cx="28" cy="50" r="3" fill="#cbd4e2"/><rect x="27" y="43" width="2" height="6" fill="#cbd4e2"/></g>
+            <g class="wheel"><circle cx="94" cy="50" r="8" fill="#0f1a2b"/><circle cx="94" cy="50" r="3" fill="#cbd4e2"/><rect x="93" y="43" width="2" height="6" fill="#cbd4e2"/></g>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="ticker" aria-hidden="true"><div class="ticker-track"><span>Python</span><span>JavaScript</span><span>Live tracking</span><span>Smart notifications</span><span>Team player</span><span>Problem solving</span><span>Python</span><span>JavaScript</span><span>Live tracking</span><span>Smart notifications</span><span>Team player</span><span>Problem solving</span></div></div>
+
+    <section id="work" class="reveal">
+      <div class="sec-grid">
+        <h2>Selected work</h2>
+        <ul class="work stagger">
+          <li>
+            <a href="#">
+              <h3>Smart waste management system</h3><span class="yr">My first project</span>
+              <p>A smart waste management system with an app that shows residents where the garbage truck is in real time and sends a pop-up message with the time it will arrive. The app also shows how much waste is recycled, with statistics and graphs.</p>
+              <div class="shot" role="img" aria-label="Illustration of a mobile phone showing the garbage truck's live location on a map, with an arrival alert">
+                <svg viewBox="0 0 520 340" xmlns="http://www.w3.org/2000/svg" style="font-family:var(--body)">
+                  <defs>
+                    <linearGradient id="shotbg" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0" style="stop-color:var(--blue)"/><stop offset=".55" style="stop-color:var(--violet)"/><stop offset="1" style="stop-color:var(--pink)"/>
+                    </linearGradient>
+                    <clipPath id="scr"><rect x="198" y="30" width="124" height="280" rx="18"/></clipPath>
+                  </defs>
+                  <rect width="520" height="340" fill="url(#shotbg)"/>
+                  <circle cx="70" cy="60" r="60" fill="#fff" opacity=".10"/>
+                  <circle cx="470" cy="290" r="80" fill="#fff" opacity=".10"/>
+
+                  <!-- phone -->
+                  <rect x="188" y="18" width="144" height="304" rx="26" fill="#0f1a2b"/>
+                  <g clip-path="url(#scr)">
+                    <rect x="198" y="30" width="124" height="280" fill="#e9f1fb"/>
+                    <rect x="204" y="96" width="44" height="34" rx="6" fill="#bfe8cf"/>
+                    <rect x="279" y="160" width="38" height="50" rx="6" fill="#bfe8cf"/>
+                    <rect x="222" y="232" width="42" height="34" rx="6" fill="#cfe0f7"/>
+                    <g stroke="#ffffff" stroke-width="10" stroke-linecap="round" fill="none">
+                      <path d="M215 320V60"/><path d="M270 320V60"/><path d="M198 220H322"/><path d="M198 140H322"/><path d="M198 90H322"/>
+                    </g>
+                    <path d="M215 300V220H270V140H296" fill="none" stroke="#2b44ff" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 8"/>
+
+                    <!-- destination -->
+                    <g transform="translate(300 140)">
+                      <circle r="6" fill="none" stroke="#ff3d81" stroke-width="2"><animate attributeName="r" values="6;24" dur="1.6s" repeatCount="indefinite"/><animate attributeName="opacity" values=".9;0" dur="1.6s" repeatCount="indefinite"/></circle>
+                      <circle r="7" fill="#ff3d81"/><circle r="3" fill="#fff"/>
+                    </g>
+
+                    <!-- moving truck -->
+                    <g>
+                      <animateMotion dur="7s" repeatCount="indefinite" path="M215 300V220H270V140H296"/>
+                      <circle r="13" fill="#fff" opacity=".92"/>
+                      <rect x="-9" y="-6" width="11" height="10" rx="2" fill="#12b76a"/>
+                      <path d="M3 -3h5l3 3v4H3z" fill="#2b44ff"/>
+                      <circle cx="-5" cy="5" r="2.2" fill="#0f1a2b"/><circle cx="6" cy="5" r="2.2" fill="#0f1a2b"/>
+                    </g>
+
+                    <!-- bottom card -->
+                    <rect x="206" y="262" width="108" height="40" rx="10" fill="#fff"/>
+                    <text x="214" y="276" font-size="8.5" font-weight="700" fill="#0f1a2b">Garbage truck</text>
+                    <text x="214" y="286" font-size="7.5" fill="#55617a">Live location</text>
+                    <circle cx="304" cy="272" r="3" fill="#12b76a"><animate attributeName="opacity" values="1;.2;1" dur="1.2s" repeatCount="indefinite"/></circle>
+                    <rect x="214" y="291" width="92" height="4" rx="2" fill="#d3daea"/>
+                    <rect x="214" y="291" width="8" height="4" rx="2" fill="#2b44ff"><animate attributeName="width" values="8;92" dur="7s" repeatCount="indefinite"/></rect>
+
+                    <!-- notification -->
+                    <g class="notif">
+                      <rect x="206" y="46" width="108" height="34" rx="10" fill="#fff"/>
+                      <circle cx="218" cy="63" r="5" fill="#ffab00"/>
+                      <text x="228" y="61" font-size="8.5" font-weight="700" fill="#0f1a2b">Truck arriving</text>
+                      <text x="228" y="72" font-size="8" fill="#55617a">in 5 minutes</text>
+                    </g>
+                  </g>
+                  <rect x="240" y="34" width="40" height="6" rx="3" fill="#0f1a2b"/>
+
+                  <!-- floating chips -->
+                  <g class="chip">
+                    <rect x="30" y="130" width="126" height="34" rx="17" fill="#fff" opacity=".96"/>
+                    <circle cx="48" cy="147" r="5" fill="#12b76a"><animate attributeName="opacity" values="1;.25;1" dur="1.4s" repeatCount="indefinite"/></circle>
+                    <text x="62" y="151" font-size="11.5" font-weight="700" fill="#0f1a2b">Live location</text>
+                  </g>
+                  <g class="chip c2">
+                    <rect x="364" y="86" width="126" height="34" rx="17" fill="#fff" opacity=".96"/>
+                    <circle cx="382" cy="103" r="5" fill="#ffab00"/>
+                    <text x="396" y="107" font-size="11.5" font-weight="700" fill="#0f1a2b">Arrival alert</text>
+                  </g>
+                  <g class="chip c3">
+                    <rect x="364" y="200" width="126" height="34" rx="17" fill="#fff" opacity=".96"/>
+                    <circle cx="382" cy="217" r="5" fill="#ff3d81"/>
+                    <text x="396" y="221" font-size="11.5" font-weight="700" fill="#0f1a2b">Recycling stats</text>
+                  </g>
+                </svg>
+              </div>
+              <div class="tags"><span>Python</span><span>JavaScript</span><span>Mobile app</span><span>Live location tracking</span><span>Arrival notifications</span><span>Recycling data</span><span>Statistics graphs</span><span>Team project</span></div>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <h3>Project name three</h3><span class="yr">2024</span>
+              <p>Describe the tools you used and what you learned. Link this row to the live site or repository.</p>
+              <div class="tags"><span>Python</span><span>Django</span><span>Docker</span></div>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="about" class="reveal">
+      <div class="sec-grid">
+        <h2>About</h2>
+        <div class="about">
+          <p>Write two or three sentences about who you are, what you work on, and what you enjoy about it. Keep it in your own voice.</p>
+          <p>Add one line about what you're looking for now, such as a full-time role, freelance work, or a collaboration.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills" class="reveal">
+      <div class="sec-grid">
+        <h2>Skills</h2>
+        <dl class="skills stagger">
+          <div><dt>Front end</dt><dd>JavaScript, Python</dd></div>
+          <div><dt>Back end</dt><dd>Python</dd></div>
+          <div><dt>Tools</dt><dd>Git, Linux</dd></div>
+          <div><dt>Ways of working</dt><dd>Clear writing, code review, shipping in small steps</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section id="experience" class="reveal">
+      <div class="sec-grid">
+        <h2>Experience</h2>
+        <ul class="jobs stagger">
+          <li>
+            <span class="when">2025 – 2029</span>
+            <div><strong>Bachelor of Engineering (BE), Computer Science and Engineering</strong>
+              <p>Alva's Institute of Engineering and Technology. Currently studying. Add any highlights, like awards, clubs or your CGPA.</p></div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="contact" class="contact reveal">
+      <div class="sec-grid">
+        <h2>Contact</h2>
+        <div>
+          <p class="big">Have a project in mind? Let's talk.</p>
+          <a class="btn" href="mailto:hello@example.com">Email me</a>
+          <div class="links">
+            <a href="#">GitHub</a>
+            <a href="#">LinkedIn</a>
+            <a href="#">Resume (PDF)</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>© 2026 Shivanand</span>
+    <button id="themeBtn" type="button">Switch light / dark</button>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Theme toggle
+  document.getElementById('themeBtn').addEventListener('click', function () {
+    var isDark = root.getAttribute('data-theme') === 'dark' ||
+      (!root.hasAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  });
+
+  // Scroll progress
+  var bar = document.getElementById('progress');
+  function onScroll() {
+    var h = root.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // Scroll reveal
+  var items = document.querySelectorAll('.reveal, .stagger');
+  if ('IntersectionObserver' in window && !reduce) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    items.forEach(function (el) { io.observe(el); });
+  } else {
+    items.forEach(function (el) { el.classList.add('in'); });
+  }
+
+  // Typing role
+  var roles = ['full-stack developer', 'app builder', 'problem solver', 'fast learner'];
+  var el = document.getElementById('role');
+  if (reduce) return;
+  var i = 0, j = roles[0].length, del = true;
+  function tick() {
+    var word = roles[i];
+    if (del) { j--; } else { j++; }
+    el.textContent = word.slice(0, j);
+    var wait = del ? 45 : 85;
+    if (!del && j === word.length) { del = true; wait = 1700; }
+    else if (del && j === 0) { del = false; i = (i + 1) % roles.length; wait = 350; }
+    setTimeout(tick, wait);
+  }
+  setTimeout(tick, 1800);
+})();
+</script>
+
+<script>
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) { document.querySelectorAll('.shot svg').forEach(function (v) { if (v.pauseAnimations) v.pauseAnimations(); }); return; }
+  var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  // 3D tilt on skill cards
+  document.querySelectorAll('.skills > div').forEach(function (card) {
+    card.addEventListener('mousemove', function (e) {
+      var r = card.getBoundingClientRect();
+      var x = (e.clientX - r.left) / r.width - .5;
+      var y = (e.clientY - r.top) / r.height - .5;
+      card.style.transitionDelay = '0s';
+      card.style.transition = 'transform .12s ease-out';
+      card.style.transform = 'perspective(600px) rotateX(' + (-y * 12) + 'deg) rotateY(' + (x * 12) + 'deg) translateY(-4px)';
+    });
+    card.addEventListener('mouseleave', function () {
+      card.style.transition = '';
+      card.style.transitionDelay = '';
+      card.style.transform = '';
+    });
+  });
+
+  // Magnetic buttons
+  if (fine) {
+    document.querySelectorAll('.btn').forEach(function (b) {
+      b.addEventListener('mousemove', function (e) {
+        var r = b.getBoundingClientRect();
+        var x = (e.clientX - (r.left + r.width / 2)) * .25;
+        var y = (e.clientY - (r.top + r.height / 2)) * .35;
+        b.style.transform = 'translate(' + x + 'px,' + y + 'px) scale(1.04)';
+      });
+      b.addEventListener('mouseleave', function () { b.style.transform = ''; });
+    });
+  }
+
+  // Click confetti
+  var colors = ['--blue', '--violet', '--pink', '--amber', '--green', '--cyan'];
+  document.addEventListener('click', function (e) {
+    var st = getComputedStyle(document.documentElement);
+    for (var i = 0; i < 16; i++) {
+      var d = document.createElement('div');
+      d.className = 'burst';
+      d.style.left = e.clientX + 'px';
+      d.style.top = e.clientY + 'px';
+      d.style.background = st.getPropertyValue(colors[i % colors.length]);
+      document.body.appendChild(d);
+      var ang = Math.random() * Math.PI * 2, dist = 50 + Math.random() * 90;
+      var a = d.animate([
+        { transform: 'translate(0,0) rotate(0) scale(1)', opacity: 1 },
+        { transform: 'translate(' + Math.cos(ang) * dist + 'px,' + (Math.sin(ang) * dist + 30) + 'px) rotate(' + (Math.random() * 540) + 'deg) scale(.3)', opacity: 0 }
+      ], { duration: 700 + Math.random() * 400, easing: 'cubic-bezier(.2,.8,.3,1)' });
+      a.onfinish = (function (n) { return function () { n.remove(); }; })(d);
+    }
+  });
+})();
+</script>
+</body>
+</html>
